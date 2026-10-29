@@ -108,14 +108,35 @@ class InventarioMemoria implements Inventario{
         return videojuegos;
     }
 }
+class Tienda{
+    private Inventario inventario;
+
+    public Tienda(Inventario inventario){
+        this.inventario = inventario;
+    }
+
+    public void mostrarCatalogo(){
+        for(Videojuego v : inventario.listar()){
+            System.out.println("- " + v.descripcion() + ": " + v.precioTotal() + " Bs");
+        }
+    }
+
+    public void vender(Videojuego videojuego, MetodoPago metodoPago){
+        System.out.println("Venta de " + videojuego.descripcion());
+        metodoPago.pagar(videojuego.precioTotal());
+    }
+}
 public class Main{
     public static void main(String[] args){
         Inventario inventario = new InventarioMemoria();
         inventario.guardar(new VideojuegoBuilder().nombre("Warcraft").precio(120).plataforma("PC").build());
         inventario.guardar(new VideojuegoBuilder().nombre("StarCraft").precio(150).plataforma("PC").digital().build());
 
-        for(Videojuego v : inventario.listar()){
-            System.out.println(v.descripcion() + ": " + v.precioTotal() + " Bs");
-        }
+        Tienda tienda = new Tienda(inventario);
+        tienda.mostrarCatalogo();
+        System.out.println("");
+        tienda.vender(inventario.listar().get(0), new Tarjeta());
+        System.out.println("");
+        tienda.vender(inventario.listar().get(1), new Efectivo());
     }
 }
