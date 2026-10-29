@@ -71,9 +71,29 @@ class VideojuegoBuilder{
         return new JuegoFisico(nombre, precio, plataforma);
     }
 }
+interface MetodoPago{
+    void pagar(double monto);
+}
+
+class Efectivo implements MetodoPago{
+    @Override
+    public void pagar(double monto){
+        System.out.println("Pago en efectivo: " + monto + " Bs");
+    }
+}
+
+class Tarjeta implements MetodoPago{
+    @Override
+    public void pagar(double monto){
+        System.out.println("Pago con tarjeta: " + monto + " Bs");
+    }
+}
+
 public class Main{
     public static void main(String[] args){
-        Videojuego juego = new VideojuegoBuilder().nombre("StarCraft").precio(150).plataforma("PC").digital().build();
-        System.out.println(juego.descripcion() + ": " + juego.precioTotal() + " Bs");
+        Videojuego warcraft = new VideojuegoBuilder().nombre("Warcraft").precio(120).plataforma("PC").build();
+        MetodoPago metodo = new Tarjeta();
+        System.out.println(warcraft.descripcion());
+        metodo.pagar(warcraft.precioTotal());
     }
 }
