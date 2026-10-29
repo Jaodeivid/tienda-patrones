@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 abstract class Videojuego{
     protected String nombre;
     protected double precio;
@@ -88,12 +90,32 @@ class Tarjeta implements MetodoPago{
         System.out.println("Pago con tarjeta: " + monto + " Bs");
     }
 }
+interface Inventario{
+    void guardar(Videojuego videojuego);
+    List<Videojuego> listar();
+}
 
+class InventarioMemoria implements Inventario{
+    private List<Videojuego> videojuegos = new ArrayList<>();
+
+    @Override
+    public void guardar(Videojuego videojuego){
+        videojuegos.add(videojuego);
+    }
+
+    @Override
+    public List<Videojuego> listar(){
+        return videojuegos;
+    }
+}
 public class Main{
     public static void main(String[] args){
-        Videojuego warcraft = new VideojuegoBuilder().nombre("Warcraft").precio(120).plataforma("PC").build();
-        MetodoPago metodo = new Tarjeta();
-        System.out.println(warcraft.descripcion());
-        metodo.pagar(warcraft.precioTotal());
+        Inventario inventario = new InventarioMemoria();
+        inventario.guardar(new VideojuegoBuilder().nombre("Warcraft").precio(120).plataforma("PC").build());
+        inventario.guardar(new VideojuegoBuilder().nombre("StarCraft").precio(150).plataforma("PC").digital().build());
+
+        for(Videojuego v : inventario.listar()){
+            System.out.println(v.descripcion() + ": " + v.precioTotal() + " Bs");
+        }
     }
 }
