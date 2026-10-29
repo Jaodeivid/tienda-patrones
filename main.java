@@ -38,9 +38,42 @@ class JuegoDigital extends Videojuego{
     }
 }
 
+class VideojuegoBuilder{
+    private String nombre = "Sin nombre";
+    private double precio = 0;
+    private String plataforma = "PC";
+    private boolean digital = false;
+
+    public VideojuegoBuilder nombre(String nombre){
+        this.nombre = nombre;
+        return this;
+    }
+
+    public VideojuegoBuilder precio(double precio){
+        this.precio = precio;
+        return this;
+    }
+
+    public VideojuegoBuilder plataforma(String plataforma){
+        this.plataforma = plataforma;
+        return this;
+    }
+
+    public VideojuegoBuilder digital(){
+        this.digital = true;
+        return this;
+    }
+
+    public Videojuego build(){
+        if(digital){
+            return new JuegoDigital(nombre, precio, plataforma);
+        }
+        return new JuegoFisico(nombre, precio, plataforma);
+    }
+}
 public class Main{
     public static void main(String[] args){
-        Videojuego juego = new JuegoFisico("Warcraft", 120, "PC");
+        Videojuego juego = new VideojuegoBuilder().nombre("StarCraft").precio(150).plataforma("PC").digital().build();
         System.out.println(juego.descripcion() + ": " + juego.precioTotal() + " Bs");
     }
 }
